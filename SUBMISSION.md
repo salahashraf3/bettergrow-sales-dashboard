@@ -1,12 +1,16 @@
 ## Submission note
 
-I built a focused sales-performance dashboard that validates an uploaded Excel workbook, aggregates monthly rows by salesperson, and turns the result into headline KPIs, a target-status table, and a budget-versus-actual chart. The app begins in a clear upload state and does not show dummy results. I chose semantic HTML, responsive CSS, vanilla JavaScript and SheetJS because the brief does not need a backend; workbook content stays in browser memory. The motion system is implemented locally with IntersectionObserver rather than an animation dependency, with an older-browser fallback and reduced-motion support. I used AI to break the brief into validation, aggregation, visualisation and test cases, then reviewed and adjusted the rules, error handling, accessibility, responsive design and edge-case behaviour myself.
+I built an upload-first sales dashboard that validates the workbook as a complete transaction before replacing the visible state. It starts with no dummy results. A rejected replacement keeps the prior valid dashboard, overlapping reads are latest-wins, and selecting the same file again works. Workbook content remains in browser memory.
+
+The contract is deliberately explainable: one row within the first 20 must contain all four headers; only documented aliases match; duplicate mappings and incomplete records fail with original Excel row numbers; numeric/currency text parsing is strict; and duplicate normalized salesperson + month records are rejected. Negative budgets and actuals are outside scope because this assessment does not model returns or credit notes. Zero budget is always `N/A` / `No budget`, and equality is on target before rounding.
+
+The UI uses semantic HTML, responsive CSS, vanilla JavaScript and SheetJS. A local IntersectionObserver system supplies AOS-style reveal motion with fallback and reduced-motion support. `node tests.js` covers each edge-case row in the agreed validation contract.
 
 ## 10-minute walkthrough
 
-1. Problem and user flow (1 min): explain the upload-first empty state, then load a valid workbook.
-2. Architecture (1 min): static app, browser-only state, SheetJS parser, separate HTML/CSS/JS.
-3. Workbook parsing (2 min): first worksheet, header search and normalization, file guards and row-level validation.
-4. Business logic (2 min): case-insensitive grouping, duplicate/month aggregation, Budget and Actual totals, Actual ≥ Budget target rule, and explicit zero-budget handling.
-5. UI and motion (2 min): executive KPIs, accessible chart, status badges, AED formatting, responsive table, local reveal animation and reduced-motion support.
-6. Tests and next steps (2 min): demonstrate a valid upload and recovery from an invalid one; mention tests for empty/malformed sheets, varied headers, bad/negative values, duplicate rows, equality, zero budgets, repeated uploads and file guards; then discuss filters, exports, automated tests, ERPNext API, roles and history.
+1. Upload-first flow (1 min): first-load empty state, no dummy dashboard, and valid upload.
+2. Transactional state (1 min): reject a bad replacement while retaining valid data; reselect the same file; explain latest-wins race protection.
+3. Header contract (2 min): first 20 rows, one complete header row, explicit aliases, duplicate mappings and Excel row numbers.
+4. Data validation (2 min): empty/header-only sheets, strict amounts and AED text, incomplete rows, negatives and duplicate salesperson-month pairs.
+5. Business logic (2 min): normalized salesperson grouping across distinct months, equality as on target and zero-budget `N/A` / `No budget`.
+6. UI and tests (2 min): responsive KPI/chart/table, local reveal motion and reduced motion; run `node tests.js` and discuss future ERPNext/server controls.

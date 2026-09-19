@@ -1,5 +1,7 @@
 # Bettergrow Sales Performance Dashboard
 
+[Live demo](https://salahashraf3.github.io/bettergrow-sales-dashboard/)
+
 A lightweight web app that accepts an Excel workbook, validates and aggregates its first worksheet in the browser, and shows headline metrics, a target-status table, and a budget-vs-actual chart.
 
 ## Run locally

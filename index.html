@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0d2d26">
+  <meta name="theme-color" content="#0a241d">
   <title>Sales Performance | Bettergrow</title>
-  <meta name="description" content="A lightweight dashboard for comparing salesperson budgets with actual sales.">
+  <meta name="description" content="A private, browser-based dashboard for comparing sales budgets with actual performance.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,57 +13,84 @@
     <header class="topbar">
       <a class="brand" href="#" aria-label="Bettergrow sales performance home">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span><strong>Bettergrow</strong><small>Sales performance</small></span>
+        <span><strong>Bettergrow</strong><small>Sales intelligence</small></span>
       </a>
-      <div class="period" id="periodLabel">Jan - Apr 2026</div>
+      <div class="header-status"><span class="status-pulse"></span><span id="headerStatus">Awaiting data</span></div>
     </header>
 
     <main>
       <section class="hero" aria-labelledby="pageTitle">
-        <div>
-          <p class="eyebrow">Commercial overview</p>
-          <h1 id="pageTitle">Turn sales data into<br><em>clear decisions.</em></h1>
-          <p class="intro">Upload the monthly sales workbook to see who is on target, where the gaps are, and what needs attention.</p>
+        <div class="hero-copy reveal">
+          <p class="eyebrow">Commercial performance</p>
+          <h1 id="pageTitle">Sales clarity,<br><em>from one upload.</em></h1>
+          <p class="intro">Upload the monthly sales workbook to compare budgets, actuals and target performance. Nothing is shown until a valid file is ready.</p>
+          <div class="trust-row" aria-label="Product features">
+            <span>Private by design</span><span>Instant analysis</span><span>Excel ready</span>
+          </div>
         </div>
-        <aside class="upload-card" id="dropZone">
-          <input type="file" id="fileInput" accept=".xlsx,.xls" aria-describedby="uploadHelp">
-          <div class="upload-icon" aria-hidden="true">↗</div>
-          <div><strong>Upload sales workbook</strong><span id="uploadHelp">Excel .xlsx or .xls · processed in your browser</span></div>
-          <button class="button primary" id="browseButton" type="button">Choose file</button>
-          <p class="file-state" id="fileState" role="status">Showing sample data</p>
+
+        <aside class="upload-card reveal" id="dropZone" aria-labelledby="uploadTitle">
+          <input type="file" id="fileInput" accept=".xlsx,.xls" aria-describedby="uploadHelp fileState">
+          <div class="upload-top">
+            <div class="upload-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></div>
+            <span class="step-label">Step 01</span>
+          </div>
+          <div><strong id="uploadTitle">Upload sales workbook</strong><span id="uploadHelp">.xlsx or .xls · maximum 10 MB</span></div>
+          <button class="button primary" id="browseButton" type="button">Choose Excel file</button>
+          <p class="file-state" id="fileState" role="status">No workbook loaded</p>
         </aside>
       </section>
 
-      <section class="kpi-grid" aria-label="Performance summary">
-        <article class="kpi"><span>Total budget</span><strong id="totalBudget">-</strong><small id="budgetRows">-</small></article>
-        <article class="kpi"><span>Actual sales</span><strong id="totalActual">-</strong><small id="actualVariance">-</small></article>
-        <article class="kpi"><span>Achievement</span><strong id="achievement">-</strong><small>Actual ÷ budget</small></article>
-        <article class="kpi"><span>Above target</span><strong id="aboveCount">-</strong><small id="belowCount">-</small></article>
-      </section>
-
-      <section class="workspace">
-        <div class="section-heading">
-          <div><p class="eyebrow">Performance by salesperson</p><h2>Budget vs actual</h2></div>
-          <div class="legend" aria-label="Chart legend"><span><i class="budget-dot"></i>Budget</span><span><i class="actual-dot"></i>Actual</span></div>
-        </div>
-        <div class="chart-wrap"><div id="chart" class="chart" role="img" aria-label="Budget and actual sales grouped by salesperson"></div></div>
-      </section>
-
-      <section class="workspace table-workspace">
-        <div class="section-heading">
-          <div><p class="eyebrow">Team detail</p><h2>Sales summary</h2></div>
-          <button class="button ghost" id="resetButton" type="button" hidden>Restore sample data</button>
-        </div>
-        <div class="table-scroll">
-          <table>
-            <thead><tr><th>Salesperson</th><th>Budget</th><th>Actual</th><th>Achievement</th><th>Status</th></tr></thead>
-            <tbody id="summaryBody"></tbody>
-          </table>
-        </div>
-      </section>
-
       <div class="notice error" id="errorNotice" role="alert" hidden></div>
-      <section class="data-note">
+
+      <section class="empty-state reveal" id="emptyState" aria-labelledby="emptyTitle">
+        <div class="empty-visual" aria-hidden="true">
+          <div class="mini-card"><i></i><i></i><i></i></div>
+          <div class="mini-chart"><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div>
+          <p class="eyebrow">Ready when you are</p>
+          <h2 id="emptyTitle">Your dashboard starts with real data.</h2>
+          <p>Use a workbook with Salesperson, Month, Budget Amount and Actual Sales columns. The dashboard will appear only after the file passes validation.</p>
+        </div>
+      </section>
+
+      <div id="dashboard" hidden>
+        <section class="dashboard-heading reveal">
+          <div><p class="eyebrow">Executive overview</p><h2>Sales performance</h2></div>
+          <div class="dashboard-actions"><span class="period" id="periodLabel"></span><button class="button ghost" id="resetButton" type="button">Upload another file</button></div>
+        </section>
+
+        <section class="kpi-grid" aria-label="Performance summary">
+          <article class="kpi reveal"><div class="kpi-label"><span>Total budget</span><i class="tone-neutral">B</i></div><strong id="totalBudget">-</strong><small id="budgetRows">-</small></article>
+          <article class="kpi reveal"><div class="kpi-label"><span>Actual sales</span><i class="tone-green">A</i></div><strong id="totalActual">-</strong><small id="actualVariance">-</small></article>
+          <article class="kpi reveal"><div class="kpi-label"><span>Achievement</span><i class="tone-gold">%</i></div><strong id="achievement">-</strong><small>Actual ÷ budget</small></article>
+          <article class="kpi reveal"><div class="kpi-label"><span>On target</span><i class="tone-blue">✓</i></div><strong id="aboveCount">-</strong><small id="belowCount">-</small></article>
+        </section>
+
+        <section class="workspace reveal">
+          <div class="section-heading">
+            <div><p class="eyebrow">Performance by salesperson</p><h2>Budget vs actual</h2></div>
+            <div class="legend" aria-label="Chart legend"><span><i class="budget-dot"></i>Budget</span><span><i class="actual-dot"></i>Actual</span></div>
+          </div>
+          <div class="chart-wrap"><div id="chart" class="chart" role="img" aria-label="Budget and actual sales grouped by salesperson"></div></div>
+        </section>
+
+        <section class="workspace table-workspace reveal">
+          <div class="section-heading">
+            <div><p class="eyebrow">Team detail</p><h2>Sales summary</h2></div>
+            <span class="row-count" id="rowCount"></span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Salesperson</th><th>Budget</th><th>Actual</th><th>Achievement</th><th>Status</th></tr></thead>
+              <tbody id="summaryBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <section class="data-note reveal">
         <span aria-hidden="true">◎</span>
         <p><strong>Your data stays private.</strong> Files are processed locally in this browser and are never uploaded to a server.</p>
       </section>

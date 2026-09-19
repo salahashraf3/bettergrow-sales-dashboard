@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d2d26">
+  <title>Sales Performance | Bettergrow</title>
+  <meta name="description" content="A lightweight dashboard for comparing salesperson budgets with actual sales.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Bettergrow sales performance home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>Bettergrow</strong><small>Sales performance</small></span>
+      </a>
+      <div class="period" id="periodLabel">Jan - Apr 2026</div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">Commercial overview</p>
+          <h1 id="pageTitle">Turn sales data into<br><em>clear decisions.</em></h1>
+          <p class="intro">Upload the monthly sales workbook to see who is on target, where the gaps are, and what needs attention.</p>
+        </div>
+        <aside class="upload-card" id="dropZone">
+          <input type="file" id="fileInput" accept=".xlsx,.xls" aria-describedby="uploadHelp">
+          <div class="upload-icon" aria-hidden="true">↗</div>
+          <div><strong>Upload sales workbook</strong><span id="uploadHelp">Excel .xlsx or .xls · processed in your browser</span></div>
+          <button class="button primary" id="browseButton" type="button">Choose file</button>
+          <p class="file-state" id="fileState" role="status">Showing sample data</p>
+        </aside>
+      </section>
+
+      <section class="kpi-grid" aria-label="Performance summary">
+        <article class="kpi"><span>Total budget</span><strong id="totalBudget">-</strong><small id="budgetRows">-</small></article>
+        <article class="kpi"><span>Actual sales</span><strong id="totalActual">-</strong><small id="actualVariance">-</small></article>
+        <article class="kpi"><span>Achievement</span><strong id="achievement">-</strong><small>Actual ÷ budget</small></article>
+        <article class="kpi"><span>Above target</span><strong id="aboveCount">-</strong><small id="belowCount">-</small></article>
+      </section>
+
+      <section class="workspace">
+        <div class="section-heading">
+          <div><p class="eyebrow">Performance by salesperson</p><h2>Budget vs actual</h2></div>
+          <div class="legend" aria-label="Chart legend"><span><i class="budget-dot"></i>Budget</span><span><i class="actual-dot"></i>Actual</span></div>
+        </div>
+        <div class="chart-wrap"><div id="chart" class="chart" role="img" aria-label="Budget and actual sales grouped by salesperson"></div></div>
+      </section>
+
+      <section class="workspace table-workspace">
+        <div class="section-heading">
+          <div><p class="eyebrow">Team detail</p><h2>Sales summary</h2></div>
+          <button class="button ghost" id="resetButton" type="button" hidden>Restore sample data</button>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Salesperson</th><th>Budget</th><th>Actual</th><th>Achievement</th><th>Status</th></tr></thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="notice error" id="errorNotice" role="alert" hidden></div>
+      <section class="data-note">
+        <span aria-hidden="true">◎</span>
+        <p><strong>Your data stays private.</strong> Files are processed locally in this browser and are never uploaded to a server.</p>
+      </section>
+    </main>
+    <footer><span>Bettergrow Holding Group</span><span>IT &amp; Digital Transformation</span></footer>
+  </div>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
